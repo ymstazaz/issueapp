@@ -15,30 +15,39 @@ public class IssueController {
     private final IssueRepository issueRepository;
 
     @GetMapping("/issueForm")
-    public String showIssueForm(@ModelAttribute("issueForm") IssueForm form){
+    public String showIssueForm(@ModelAttribute("issueForm") IssueForm form) {
         return "issueForm";
     }
+
     @PostMapping("/issues")
     public String createIssue(IssueForm issueForm,
-                              Model model){
+                              Model model) {
         try {
-            issueRepository.insert(issueForm.getTitle(),issueForm.getContent(),issueForm.getPeriod(),issueForm.getImportance());
-        } catch (Exception e){
+            issueRepository.insert(issueForm.getTitle(), issueForm.getContent(), issueForm.getPeriod(), issueForm.getImportance());
+        } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error";
         }
         return "redirect:/";
     }
+
     @GetMapping
-    public String showIssues(Model model){
+    public String showIssues(Model model) {
         var issueList = issueRepository.findAll();
-        model.addAttribute("issueList",issueList);
+        model.addAttribute("issueList", issueList);
         return "index";
     }
+
     @GetMapping("/issues/{id}")
-    public String issueDetail(@PathVariable long id, Model model){
+    public String issueDetail(@PathVariable long id, Model model) {
         var issue = issueRepository.findById(id);
-        model.addAttribute("issue",issue);
+        model.addAttribute("issue", issue);
         return "detail";
+    }
+
+    @PostMapping("/issues/{id}/update")
+    public String updateIssue(@PathVariable long id, IssueForm issueForm) {
+        issueRepository.update(id, issueForm.getTitle(), issueForm.getContent(), issueForm.getPeriod(), issueForm.getImportance());
+        return "redirect:/";
     }
 }
