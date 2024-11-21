@@ -50,4 +50,10 @@ public class IssueController {
         issueRepository.update(id, issueForm.getTitle(), issueForm.getContent(), issueForm.getPeriod(), issueForm.getImportance());
         return "redirect:/";
     }
+
+    @PostMapping("/issues/{id}/delete")
+    public String deleteIssue(@PathVariable long id){
+        issueRepository.deleteById(id);
+        return "redirect:/";
+    }
 }
